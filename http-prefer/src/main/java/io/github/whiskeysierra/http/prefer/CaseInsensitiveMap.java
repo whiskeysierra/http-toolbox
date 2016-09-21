@@ -6,6 +6,7 @@ import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -188,7 +189,7 @@ final class CaseInsensitiveMap<V> extends AbstractMap<String, V> {
         @Override
         public int hashCode() {
             if (hash == 0) {
-                this.hash = value.toLowerCase().hashCode() ^ 17; // TODO is that ok?
+                this.hash = value.toLowerCase(Locale.ROOT).hashCode() ^ 17; // TODO is that ok?
             }
             return hash;
         }

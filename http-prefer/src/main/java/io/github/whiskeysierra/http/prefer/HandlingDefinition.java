@@ -1,6 +1,7 @@
 package io.github.whiskeysierra.http.prefer;
 
-final class HandlingPreference implements Preference<Handling> {
+final class HandlingDefinition implements Definition<Handling> {
+
     @Override
     public String getName() {
         return "handling";
@@ -17,4 +18,5 @@ final class HandlingPreference implements Preference<Handling> {
                 return null; // TODO throw?
         }
     }
+
 }

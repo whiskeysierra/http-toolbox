@@ -4,33 +4,62 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 
 public interface Prefer {
 
-    Preference<Void> RESPOND_ASYNC = new RespondAsyncPreference();
-    Preference<Return> RETURN = new ReturnPreference();
-    Preference<Integer> WAIT = new WaitPreference();
-    Preference<Handling> HANDLING = new HandlingPreference();
+    Definition<Void> RESPOND_ASYNC = new RespondAsyncDefinition();
+    Definition<Return> RETURN = new ReturnDefinition();
+    Definition<Integer> WAIT = new WaitDefinition();
+    Definition<Handling> HANDLING = new HandlingDefinition();
 
-    default boolean contains(final Preference<?> preference) {
-        return contains(preference.getName());
+    default boolean contains(final Definition<?> definition) {
+        return contains(definition.getName());
     }
 
-    boolean contains(final String preference);
+    boolean contains(final String name);
 
-    default <T> T get(final Preference<T> preference) {
-        return preference.parse(get(preference.getName()));
+    // TODO nullable
+    default <T> Preference<T> get(final Definition<T> definition) {
+        final String name = definition.getName();
+        final String value = get(name);
+
+        if (value == null) {
+            return null;
+        }
+
+        final T parsed = definition.parse(value);
+        final Map<String, String> parameters = getParameters(name);
+
+        return new Preference<T>() {
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public T getValue() {
+                return parsed;
+            }
+
+            @Override
+            public Map<String, String> getParameters() {
+                return parameters;
+            }
+        };
     }
 
-    // TODO null vs empty string
-    String get(final String preference);
+    // TODO nullable
+    String get(final String name);
 
-    default boolean apply(final Preference<?> preference) {
-        return apply(preference.getName());
+    Map<String, String> getParameters(final String name);
+
+    default boolean apply(final Definition<?> definition) {
+        return apply(definition.getName());
     }
 
-    boolean apply(final String preference);
+    boolean apply(final String name);
 
     // TODO single vs. multiple headers
     String applied();

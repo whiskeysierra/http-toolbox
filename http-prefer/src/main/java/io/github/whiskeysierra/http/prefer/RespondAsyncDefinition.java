@@ -1,6 +1,6 @@
 package io.github.whiskeysierra.http.prefer;
 
-final class RespondAsyncPreference implements Preference<Void> {
+final class RespondAsyncDefinition implements Definition<Void> {
 
     @Override
     public String getName() {

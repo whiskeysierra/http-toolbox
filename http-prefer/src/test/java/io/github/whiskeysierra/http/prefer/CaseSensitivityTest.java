@@ -27,8 +27,8 @@ public final class CaseSensitivityTest {
      */
     @Test
     public void shouldCompareTokenValuesCaseSensitive() {
-        assertThat(Prefer.valueOf("return=minimal").get(Prefer.RETURN), is(Return.MINIMAL));
-        assertThat(Prefer.valueOf("return=MINIMAL").get(Prefer.RETURN), is(not(Return.MINIMAL)));
+        assertThat(Prefer.valueOf("return=minimal").get(Prefer.RETURN).getValue(), is(Return.MINIMAL));
+        assertThat(Prefer.valueOf("return=MINIMAL").get(Prefer.RETURN).getValue(), is(not(Return.MINIMAL)));
     }
 
 }

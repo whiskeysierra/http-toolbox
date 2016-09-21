@@ -30,9 +30,9 @@ public final class MultipleInstancesTest {
         ));
 
         assertThat(prefer, hasToString("return=representation, wait=1, handling=strict"));
-        assertThat(prefer.get(Prefer.RETURN), is(Return.REPRESENTATION));
-        assertThat(prefer.get(Prefer.HANDLING), is(Handling.STRICT));
-        assertThat(prefer.get(Prefer.WAIT), is(1));
+        assertThat(prefer.get(Prefer.RETURN).getValue(), is(Return.REPRESENTATION));
+        assertThat(prefer.get(Prefer.HANDLING).getValue(), is(Handling.STRICT));
+        assertThat(prefer.get(Prefer.WAIT).getValue(), is(1));
     }
 
 }

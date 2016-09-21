@@ -1,6 +1,6 @@
 package io.github.whiskeysierra.http.prefer;
 
-final class ReturnPreference implements Preference<Return> {
+final class ReturnDefinition implements Definition<Return> {
 
     @Override
     public String getName() {

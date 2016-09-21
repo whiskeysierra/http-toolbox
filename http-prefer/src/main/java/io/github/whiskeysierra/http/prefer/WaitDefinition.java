@@ -1,6 +1,6 @@
 package io.github.whiskeysierra.http.prefer;
 
-final class WaitPreference implements Preference<Integer> {
+final class WaitDefinition implements Definition<Integer> {
 
     @Override
     public String getName() {

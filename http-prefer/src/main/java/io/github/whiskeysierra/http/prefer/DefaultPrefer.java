@@ -1,9 +1,7 @@
 package io.github.whiskeysierra.http.prefer;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,17 +20,22 @@ final class DefaultPrefer implements Prefer {
     }
 
     @Override
-    public boolean contains(final String preference) {
-        return preferences.containsKey(preference);
+    public boolean contains(final String name) {
+        return preferences.containsKey(name);
     }
 
     @Override
-    public String get(final String preference) {
-        return preferences.get(preference);
+    public String get(final String name) {
+        return preferences.get(name);
     }
 
     @Override
-    public boolean apply(final String preference) {
+    public Map<String, String> getParameters(final String name) {
+        return emptyMap(); // TODO
+    }
+
+    @Override
+    public boolean apply(final String name) {
         return false;
     }
 
@@ -79,7 +82,9 @@ final class DefaultPrefer implements Prefer {
 
         Arrays.stream(value.split(",")).forEach(preference -> {
             final String[] parts = preference.split("=", 2);
-            preferences.putIfAbsent(parseToken(parts), parseWord(parts));
+            final String token = parseToken(parts);
+            final String word = parseWord(parts);
+            preferences.putIfAbsent(token, word);
         });
     }
 

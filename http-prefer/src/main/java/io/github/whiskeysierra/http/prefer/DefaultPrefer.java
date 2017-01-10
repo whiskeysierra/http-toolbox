@@ -1,22 +1,35 @@
 package io.github.whiskeysierra.http.prefer;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.joining;
 
 final class DefaultPrefer implements Prefer {
 
-    private static final DefaultPrefer NONE = new DefaultPrefer(emptyMap());
+    private static final Pattern TOKEN = compile("(?:[-!#$%&'*+.^_`|~]|\\w)+");
+    private static final Pattern QUOTED_STRING = compile("(?:\"(?:[\\t !#-\\[\\]-~\\x80-\\xFF]|(?:\\\\[\\t !-~\\x80-\\xFF]))*\")");
+    private static final Pattern NAMED_VALUE = compile("(" + TOKEN + ")(?:\\s*=\\s*(" + TOKEN + "|" + QUOTED_STRING + "))?");
+    private static final Pattern PREFERENCE = compile("\\s*(,\\s*)+|(?:" + NAMED_VALUE + "((?:\\s*;\\s*(?:" + NAMED_VALUE + ")?)*))");
+    private static final Pattern PARAMETER = compile("\\s*(;\\s*)+|(?:" + NAMED_VALUE + ")");
+
+    private static final DefaultPrefer NONE = new DefaultPrefer(emptyMap(), emptyMap());
 
     private final Map<String, String> preferences;
+    private final Map<String, Map<String, String>> parameters;
 
-    DefaultPrefer(final Map<String, String> preferences) {
+    DefaultPrefer(final Map<String, String> preferences, final Map<String, Map<String, String>> parameters) {
         this.preferences = preferences;
+        this.parameters = parameters;
     }
 
     @Override
@@ -31,7 +44,12 @@ final class DefaultPrefer implements Prefer {
 
     @Override
     public Map<String, String> getParameters(final String name) {
-        return emptyMap(); // TODO
+        return parameters.getOrDefault(name, emptyMap());
+    }
+
+    @Override
+    public <T> boolean apply(final Definition<T> definition, final T value) {
+        return false;
     }
 
     @Override
@@ -47,7 +65,24 @@ final class DefaultPrefer implements Prefer {
     @Override
     public String toString() {
         return preferences.entrySet().stream()
-                .map(e -> e.getValue() == null ? e.getKey() : e.getKey() + "=" + e.getValue())
+                .map(entry -> {
+                    final String name = entry.getKey();
+                    final String value = entry.getValue();
+
+                    final Map<String, String> parameters = getParameters(name);
+
+                    final String p = parameters.isEmpty() ? "" : "; " + parameters.entrySet().stream()
+                            .map(e -> e.getValue() == null ?
+                                    e.getKey() :
+                                    e.getKey() + "=" + (TOKEN.matcher(e.getValue()).matches() ? e.getValue() : "\"" + e.getValue() + "\""))
+                            .collect(joining("; "));
+
+                    if (value == null) {
+                        return name + p;
+                    } else {
+                        return name + "=" + (TOKEN.matcher(value).matches() ? value : "\"" + value + "\"") + p;
+                    }
+                })
                 .collect(joining(", "));
     }
 
@@ -57,62 +92,94 @@ final class DefaultPrefer implements Prefer {
         }
 
         final Map<String, String> preferences = new CaseInsensitiveMap<>();
+        final Map<String, Map<String, String>> parameters = new CaseInsensitiveMap<>();
 
-        values.stream().filter(Objects::nonNull).forEach(value -> {
-            final String[] parts = value.trim().split(";", 2);
-            final String first = parts[0].trim();
-            final String second = parts.length == 2 ? parts[1].trim() : "";
+        values.stream()
+                .filter(Objects::nonNull)
+                .filter(not(String::isEmpty))
+                .forEach(value -> parseInto(value, preferences, parameters));
 
-            if (first.isEmpty() && second.isEmpty()) {
+        return new DefaultPrefer(unmodifiableMap(preferences), parameters);
+    }
+
+    private static <T> Predicate<T> not(final Predicate<T> predicate) {
+        return predicate.negate();
+    }
+
+    // TODO find a better way than modifying the parameter
+    private static void parseInto(final String value, final Map<String, String> result,
+            final Map<String, Map<String, String>> parameters) {
+
+        String separator = "";
+        final Matcher matcher = PREFERENCE.matcher(value.trim());
+
+        while (matcher.find() ) {
+            if (matcher.group(1) != null) {
+                separator = matcher.group(1);
+            } else if (separator != null) {
+                final String name = matcher.group(2).toLowerCase(Locale.ROOT);
+                // RFC 7240:
+                // If any preference is specified more than once, only the first instance is to be
+                // considered. All subsequent occurrences SHOULD be ignored without signaling
+                // an error or otherwise altering the processing of the request.
+                if (!result.containsKey(name)) {
+                    final String preferenceValue = parseWord(matcher.group(3));
+                    final Map<String, String> parameters2 =
+                            matcher.group(4) == null || matcher.group(4).isEmpty() ?
+                                    emptyMap() :
+                                    parseParameters(matcher.group(4));
+
+                    result.put(name, preferenceValue);
+                    parameters.put(name, parameters2);
+                }
+
+                separator = null;
+            } else {
                 return;
             }
-
-            parseInto(first, preferences);
-        });
-
-        return new DefaultPrefer(unmodifiableMap(preferences));
-    }
-
-    // TODO use pre-compiled patterns
-    // TODO find a better way than modifying the parameter
-    private static void parseInto(final String value, final Map<String, String> preferences) {
-        if (value.isEmpty()) {
-            return;
         }
-
-        Arrays.stream(value.split(",")).forEach(preference -> {
-            final String[] parts = preference.split("=", 2);
-            final String token = parseToken(parts);
-            final String word = parseWord(parts);
-            preferences.putIfAbsent(token, word);
-        });
+        if (matcher.hitEnd()) {
+            // what to do here?
+        }
     }
 
-    private static String parseToken(final String[] parts) {
-        return parts[0].trim();
+    // TODO find a better way than modifying the parameter
+    private static Map<String, String> parseParameters(final String parameters) {
+        final Map<String, String> result = new CaseInsensitiveMap<>();
+        String separator = "";
+        int start = 0;
+        final Matcher matcher = PARAMETER.matcher(parameters.trim());
+        while (matcher.find() && matcher.start() == start) {
+            start = matcher.end();
+            if (matcher.group(1) != null) {
+                separator = matcher.group(1);
+            } else if (separator != null) {
+                final String name = matcher.group(2);// TODO? .toLowerCase(Locale.ROOT);
+                // We have to keep already existing parameters.
+                if (!result.containsKey(name)) {
+                    result.put(name, parseWord(matcher.group(3)));
+                }
+                separator = null;
+            } else {
+                return null;
+            }
+        }
+        return matcher.hitEnd() ? Collections.unmodifiableMap(result) : null;
     }
 
-    /**
-     * <blockquote>
-     * Empty or zero-length values on both the preference token and within parameters are equivalent to no value being
-     * specified at all.
-     * </blockquote>
-     *
-     * @param parts an array holding a key and potentially a value, i.e. either one or two values
-     * @return the unquoted value if present, or an empty string otherwise
-     * @see <a href="https://tools.ietf.org/html/rfc7240#section-2">Section 2 of [RFC7240]</a>
-     */
-    private static String parseWord(final String[] parts) {
-        return parts.length == 2 ? unquote(parts[1].trim()) : null;
-    }
-
-    private static String unquote(final String word) {
-        return emptyToNull(word.length() < 2 ?
-                word :
-                // TODO parse quoted values correctly
-                word.startsWith("\"") && word.endsWith("\"") ?
-                        word.substring(1, word.length() - 1) :
-                        word);
+    private static String parseWord(final String value) {
+        if (value == null) {
+            return null;
+        }
+        String result = value;
+        if (value.startsWith("\"")) {
+            result = value.substring(1, value.length() - 1);
+        }
+        // Unquote backslash-quoted characters.
+        if (result.indexOf('\\') >= 0) {
+            result = result.replaceAll("\\\\(.)", "$1");
+        }
+        return emptyToNull(result);
     }
 
     private static String emptyToNull(final String s) {

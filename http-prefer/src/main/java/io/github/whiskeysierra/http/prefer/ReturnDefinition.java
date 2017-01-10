@@ -15,7 +15,7 @@ final class ReturnDefinition implements Definition<Return> {
             case "representation":
                 return Return.REPRESENTATION;
             default:
-                return null; // TODO throw?
+                return null;
         }
     }
 

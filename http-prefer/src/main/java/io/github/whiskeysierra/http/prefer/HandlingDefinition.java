@@ -15,7 +15,7 @@ final class HandlingDefinition implements Definition<Handling> {
             case "lenient":
                 return Handling.LENIENT;
             default:
-                return null; // TODO throw?
+                return null;
         }
     }
 

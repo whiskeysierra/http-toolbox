@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 
 public interface Prefer {
@@ -20,7 +19,7 @@ public interface Prefer {
 
     boolean contains(final String name);
 
-    // TODO nullable
+    // TODO nullable or throw?
     default <T> Preference<T> get(final Definition<T> definition) {
         final String name = definition.getName();
         final String value = get(name);
@@ -55,12 +54,20 @@ public interface Prefer {
 
     Map<String, String> getParameters(final String name);
 
+    // TODO test
     default boolean apply(final Definition<?> definition) {
         return apply(definition.getName());
     }
 
+    // TODO test
+    <T> boolean apply(final Definition<T> definition, final T value);
+
+    // TODO test
     boolean apply(final String name);
 
+    // TODO apply(String, String)?
+
+    // TODO test
     // TODO single vs. multiple headers
     String applied();
 

@@ -1,6 +1,6 @@
 # HTTP Toolbox
 
-[![Banner 888×244](http://placehold.it/888x244)](http://placehold.it/888x244)
+[![Banner 888×244](docs/toolbox.png)](https://pixabay.com/en/toolbox-red-box-grey-closed-gray-575407/)
 
 [![Build Status](https://img.shields.io/travis/whiskeysierra/http-toolbox.svg)](https://travis-ci.org/whiskeysierra/http-toolbox)
 [![Coverage Status](https://img.shields.io/coveralls/whiskeysierra/http-toolbox.svg)](https://coveralls.io/r/whiskeysierra/http-toolbox)

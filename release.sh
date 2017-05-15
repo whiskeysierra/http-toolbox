@@ -15,3 +15,6 @@ mvn scm:tag
 mvn versions:set -D newVersion=$2-SNAPSHOT
 git add $(find . -name pom.xml)
 git commit -m "Development $2-SNAPSHOT"
+
+git push
+git push --tags

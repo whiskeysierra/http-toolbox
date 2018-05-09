@@ -3,8 +3,9 @@
 [![Banner 888×244](docs/toolbox.png)](https://pixabay.com/en/toolbox-red-box-grey-closed-gray-575407/)
 
 [![Build Status](https://img.shields.io/travis/whiskeysierra/http-toolbox.svg)](https://travis-ci.org/whiskeysierra/http-toolbox)
-[![Coverage Status](https://img.shields.io/coveralls/whiskeysierra/http-toolbox.svg)](https://coveralls.io/r/whiskeysierra/http-toolbox)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.github.whiskeysierra/http-toolbox/badge.svg)](http://www.javadoc.io/doc/io.github.whiskeysierra/http-toolbox)
+[![Coverage Status](https://img.shields.io/coveralls/whiskeysierra/http-toolbox/master.svg)](https://coveralls.io/r/whiskeysierra/http-toolbox)
+[![Code Quality](https://img.shields.io/codacy/grade/64f144ccc9e94925ba685276c18d9c30/master.svg)](https://www.codacy.com/app/whiskeysierra/http-toolbox)
+[![Javadoc](http://javadoc.io/badge/io.github.whiskeysierra/http-toolbox.svg)](http://www.javadoc.io/doc/io.github.whiskeysierra/http-toolbox)
 [![Release](https://img.shields.io/github/release/whiskeysierra/http-toolbox.svg)](https://github.com/whiskeysierra/http-toolbox/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.whiskeysierra/http-toolbox.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.whiskeysierra/http-toolbox)
 

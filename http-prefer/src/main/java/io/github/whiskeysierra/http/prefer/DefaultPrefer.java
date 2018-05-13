@@ -138,9 +138,8 @@ final class DefaultPrefer implements Prefer {
                 return;
             }
         }
-        if (matcher.hitEnd()) {
-            // what to do here?
-        }
+
+        // TODO handle dangling, unmatched parts (using matcher.hitEnd)
     }
 
     // TODO find a better way than modifying the parameter
@@ -164,7 +163,7 @@ final class DefaultPrefer implements Prefer {
                 return null;
             }
         }
-        return matcher.hitEnd() ? Collections.unmodifiableMap(result) : null;
+        return matcher.hitEnd() ? unmodifiableMap(result) : null;
     }
 
     private static String parseWord(final String value) {

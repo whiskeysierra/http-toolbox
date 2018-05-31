@@ -17,7 +17,6 @@ public final class CaseSensitivityTest {
     @Test
     public void shouldCompareTokenNamesCaseInsensitive() {
         assertThat(Prefer.valueOf("RESPOND-ASYNC").contains(Prefer.RESPOND_ASYNC), is(true));
-        assertThat(Prefer.valueOf("respond-async").contains("RESPOND-ASYNC"), is(true));
     }
 
     /**

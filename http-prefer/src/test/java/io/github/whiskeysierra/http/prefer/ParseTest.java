@@ -14,13 +14,16 @@ import static org.hamcrest.Matchers.nullValue;
 
 public final class ParseTest {
 
+    private final Definition<String> foo = Definition.string("foo");
+    private final Definition<String> weird = Definition.string("weird");
+
     @Test
     public void shouldSupportNullPreference() {
         final String value = null;
         final Prefer prefer = Prefer.valueOf(value);
 
         assertThat(prefer, hasToString(""));
-        assertThat(prefer.contains("foo"), is(false));
+        assertThat(prefer.contains(foo), is(false));
     }
 
     @Test
@@ -28,7 +31,7 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf(" ");
 
         assertThat(prefer, hasToString(""));
-        assertThat(prefer.contains("foo"), is(false));
+        assertThat(prefer.contains(foo), is(false));
     }
 
     @Test
@@ -36,7 +39,7 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf("");
 
         assertThat(prefer, hasToString(""));
-        assertThat(prefer.contains("foo"), is(false));
+        assertThat(prefer.contains(foo), is(false));
     }
 
     /**
@@ -50,8 +53,8 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf("foo=, bar");
 
         assertThat(prefer, hasToString("foo, bar"));
-        assertThat(prefer.contains("foo"), is(true));
-        assertThat(prefer.get("foo"), is(nullValue()));
+        assertThat(prefer.contains(foo), is(true));
+        assertThat(prefer.get(foo).getValue(), is(nullValue()));
     }
 
     /**
@@ -65,8 +68,8 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf("foo=\"\"");
 
         assertThat(prefer, hasToString("foo"));
-        assertThat(prefer.contains("foo"), is(true));
-        assertThat(prefer.get("foo"), is(nullValue()));
+        assertThat(prefer.contains(foo), is(true));
+        assertThat(prefer.get(foo).getValue(), is(nullValue()));
     }
 
     @Test
@@ -84,18 +87,7 @@ public final class ParseTest {
 
         // TODO force quote on toString
         // TODO assertThat(prefer, hasToString("weird=\"a\\\\b,\\\"123\\\"c\", wait=1"));
-        assertThat(prefer.get("weird"), is("a\\b,\"123\"c"));
-        assertThat(prefer.get(Prefer.WAIT).getValue(), is(1));
-    }
-
-    // TODO attribute https://github.com/apache/olingo-odata4
-    @Test
-    public void shouldSupportSpecialCharacters() {
-        final Prefer prefer = Prefer.valueOf("!#$%&'*+-.^_`|~ = \"!#$%&'()*+,-./:;<=>?@[]^_`{|}~¡\u00FF\", wait=1");
-
-        // TODO force quote on toString
-        assertThat(prefer, hasToString("!#$%&'*+-.^_`|~=\"!#$%&'()*+,-./:;<=>?@[]^_`{|}~¡\u00FF\", wait=1"));
-        assertThat(prefer.get("!#$%&'*+-.^_`|~"), is("!#$%&'()*+,-./:;<=>?@[]^_`{|}~¡\u00FF"));
+        assertThat(prefer.get(weird).getValue(), is("a\\b,\"123\"c"));
         assertThat(prefer.get(Prefer.WAIT).getValue(), is(1));
     }
 
@@ -113,7 +105,7 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf("foo=bar, foo=baz");
 
         assertThat(prefer, hasToString("foo=bar"));
-        assertThat(prefer.get("foo"), is("bar"));
+        assertThat(prefer.get(foo).getValue(), is("bar"));
     }
 
     /**
@@ -148,7 +140,7 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf("foo=bar, , foo=baz");
 
         assertThat(prefer, hasToString("foo=bar"));
-        assertThat(prefer.get("foo"), is("bar"));
+        assertThat(prefer.get(foo).getValue(), is("bar"));
     }
 
     @Test
@@ -156,7 +148,7 @@ public final class ParseTest {
         final Prefer prefer = Prefer.valueOf("foo=bar,, foo=baz");
 
         assertThat(prefer, hasToString("foo=bar"));
-        assertThat(prefer.get("foo"), is("bar"));
+        assertThat(prefer.get(foo).getValue(), is("bar"));
     }
 
     @Test

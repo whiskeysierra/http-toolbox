@@ -1,10 +1,15 @@
 package io.github.whiskeysierra.http.prefer;
 
-final class RespondAsyncDefinition implements Definition<Void> {
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+final class ValuelessDefinition implements Definition<Void> {
+
+    private final String name;
 
     @Override
     public String getName() {
-        return "respond-async";
+        return name;
     }
 
     @Override
@@ -14,7 +19,7 @@ final class RespondAsyncDefinition implements Definition<Void> {
 
     @Override
     public String render(final Void value) {
-        return getName();
+        return null;
     }
 
 }

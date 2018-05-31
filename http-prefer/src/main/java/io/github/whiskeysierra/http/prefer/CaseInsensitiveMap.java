@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+// TODO http-common
 final class CaseInsensitiveMap<V> extends AbstractMap<String, V> {
 
     private final Map<UncasedString, V> map = new LinkedHashMap<>();

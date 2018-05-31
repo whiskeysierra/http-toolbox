@@ -1,15 +1,16 @@
 package io.github.whiskeysierra.http.prefer;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public interface Preference<T> {
 
-    String getName();
+    Definition<T> getDefinition();
 
-    // TODO nullable?
+    @Nullable
     T getValue();
 
-    // TODO unmodifiable
+    // TODO @Immutable
     Map<String, String> getParameters();
 
 }

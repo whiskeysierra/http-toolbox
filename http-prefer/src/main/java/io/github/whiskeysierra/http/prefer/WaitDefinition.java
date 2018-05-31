@@ -12,4 +12,9 @@ final class WaitDefinition implements Definition<Integer> {
         return Integer.valueOf(value);
     }
 
+    @Override
+    public String render(final Integer value) {
+        return getName() + "=" + value;
+    }
+
 }

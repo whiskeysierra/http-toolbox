@@ -1,5 +1,7 @@
 package io.github.whiskeysierra.http.prefer;
 
+import java.util.Locale;
+
 final class HandlingDefinition implements Definition<Handling> {
 
     @Override
@@ -17,6 +19,11 @@ final class HandlingDefinition implements Definition<Handling> {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public String render(final Handling value) {
+        return getName() + "=" + value.name().toLowerCase(Locale.ROOT);
     }
 
 }

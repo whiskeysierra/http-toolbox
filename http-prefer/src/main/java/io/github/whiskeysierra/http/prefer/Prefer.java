@@ -2,7 +2,10 @@ package io.github.whiskeysierra.http.prefer;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
 
@@ -13,63 +16,50 @@ public interface Prefer {
     Definition<Integer> WAIT = new WaitDefinition();
     Definition<Handling> HANDLING = new HandlingDefinition();
 
-    default boolean contains(final Definition<?> definition) {
-        return contains(definition.getName());
+    boolean contains(final Definition<?> definition);
+
+    default <T> boolean contains(final Definition<T> definition, final T value) {
+        return contains(definition) && Objects.equals(get(definition).getValue(), value);
     }
 
-    boolean contains(final String name);
+    <T> Preference<T> get(final Definition<T> definition) throws IllegalArgumentException;
 
-    // TODO nullable or throw?
-    default <T> Preference<T> get(final Definition<T> definition) {
-        final String name = definition.getName();
-        final String value = get(name);
+    boolean apply(final Definition<?> definition);
 
-        if (value == null) {
-            return null;
+    default <T> boolean apply(final Preference<T> preference) {
+        // The syntax of the Preference-Applied header differs from that of the
+        // Prefer header in that parameters are not included.
+        return apply(preference.getDefinition(), preference.getValue());
+    }
+
+    default <T> boolean apply(final Definition<T> definition, final T value) {
+        if (contains(definition, value)) {
+            apply(definition);
+            return true;
         }
 
-        final T parsed = definition.parse(value);
-        final Map<String, String> parameters = getParameters(name);
-
-        return new Preference<T>() {
-            @Override
-            public String getName() {
-                return name;
-            }
-
-            @Override
-            public T getValue() {
-                return parsed;
-            }
-
-            @Override
-            public Map<String, String> getParameters() {
-                return parameters;
-            }
-        };
+        return false;
     }
 
-    // TODO nullable
-    String get(final String name);
-
-    Map<String, String> getParameters(final String name);
-
-    // TODO test
-    default boolean apply(final Definition<?> definition) {
-        return apply(definition.getName());
+    default <T> void apply(final Definition<T> definition, final Consumer<Preference<T>> consumer) {
+        if (apply(definition)) {
+            consumer.accept(get(definition));
+        }
     }
 
-    // TODO test
-    <T> boolean apply(final Definition<T> definition, final T value);
+    default <T> void apply(final Definition<T> definition, final T value, final Consumer<Preference<T>> consumer) {
+        if (apply(definition, value)) {
+            consumer.accept(get(definition));
+        }
+    }
 
-    // TODO test
-    boolean apply(final String name);
-
-    // TODO apply(String, String)?
-
-    // TODO test
-    // TODO single vs. multiple headers
     String applied();
+
+    void applyTo(final BiConsumer<String, String> target);
+
+    static Prefer parseFrom(final Function<String, String> provider) {
+        return valueOf(provider.apply("Prefer"));
+    }
 
     static Prefer valueOf(@Nullable final String value) {
         return valueOf(singletonList(value));

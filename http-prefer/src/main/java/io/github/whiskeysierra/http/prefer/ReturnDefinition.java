@@ -1,5 +1,7 @@
 package io.github.whiskeysierra.http.prefer;
 
+import java.util.Locale;
+
 final class ReturnDefinition implements Definition<Return> {
 
     @Override
@@ -17,6 +19,11 @@ final class ReturnDefinition implements Definition<Return> {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public String render(final Return value) {
+        return getName() + "=" + value.name().toLowerCase(Locale.ROOT);
     }
 
 }

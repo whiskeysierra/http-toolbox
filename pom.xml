@@ -98,6 +98,10 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -185,6 +189,12 @@
                 <version>2.18.3</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>2.18.3</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -269,7 +279,6 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <!--
                                 <rule>
                                     <element>CLASS</element>
                                     <limits>
@@ -285,7 +294,6 @@
                                         </limit>
                                     </limits>
                                 </rule>
-                                -->
                             </rules>
                         </configuration>
                     </execution>

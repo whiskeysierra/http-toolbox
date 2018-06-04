@@ -1,8 +1,11 @@
 package io.github.whiskeysierra.http.prefer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
@@ -16,10 +19,11 @@ class PreferParser {
             return emptyMap();
         }
 
-        final Map<String, RawPreference> preferences = new CaseInsensitiveMap<>();
+        final Map<String, RawPreference> preferences = new TreeMap<>(String::compareToIgnoreCase);
 
         values.stream()
                 .filter(Objects::nonNull)
+                .map(String::trim)
                 .filter(not(String::isEmpty))
                 .forEach(value -> parseInto(value, preferences));
 
@@ -31,64 +35,52 @@ class PreferParser {
     }
 
     // TODO find a better way than modifying the parameter
-    private static void parseInto(final String value, final Map<String, RawPreference> result) {
+    private static void parseInto(final String prefer, final Map<String, RawPreference> result) {
+        final Matcher matcher = Grammar.PREFERENCE.matcher(prefer);
 
-        String separator = "";
-        final Matcher matcher = Grammar.PREFERENCE.matcher(value.trim());
+        int start = 0;
 
-        while (matcher.find() ) {
-            if (matcher.group(1) != null) {
-                separator = matcher.group(1);
-            } else if (separator != null) {
-                final String name = matcher.group(2);
-                // RFC 7240:
-                // If any preference is specified more than once, only the first instance is to be
-                // considered. All subsequent occurrences SHOULD be ignored without signaling
-                // an error or otherwise altering the processing of the request.
-                if (!result.containsKey(name)) {
-                    final String preferenceValue = parseWord(matcher.group(3));
-                    final String group = matcher.group(4);
-                    final Map<String, String> parameters2 =
-                            group == null || group.isEmpty() ?
-                                    emptyMap() :
-                                    parseParameters(group);
+        while (matcher.find()) {
+            if (matcher.start() != start) {
+                throw new IllegalArgumentException();
+            }
 
-                    result.put(name, new RawPreference(name, preferenceValue, parameters2));
-                }
+            start = matcher.end();
 
-                separator = null;
-            } else {
+            final String name = matcher.group(1);
+            if (!result.containsKey(name)) {
+                final String value = parseWord(matcher.group(2));
+                final Map<String, String> parameters = parseParameters(matcher.group(3));
+
+                result.put(name, new RawPreference(value, parameters));
+            }
+
+            if (matcher.hitEnd()) {
                 return;
             }
         }
 
+        throw new IllegalArgumentException();
     }
 
-    // TODO find a better way than modifying the parameter
+    @Nonnull
     private static Map<String, String> parseParameters(final String parameters) {
-        final Map<String, String> result = new CaseInsensitiveMap<>();
-        String separator = "";
-        int start = 0;
+        final Map<String, String> result = new TreeMap<>(String::compareToIgnoreCase);
         final Matcher matcher = Grammar.PARAMETER.matcher(parameters.trim());
-        while (matcher.find() && matcher.start() == start) {
-            start = matcher.end();
-            if (matcher.group(1) != null) {
-                separator = matcher.group(1);
-            } else if (separator != null) {
-                final String name = matcher.group(2);// TODO? .toLowerCase(Locale.ROOT);
-                // We have to keep already existing parameters.
-                if (!result.containsKey(name)) {
-                    result.put(name, parseWord(matcher.group(3)));
-                }
-                separator = null;
-            } else {
-                return null;
+
+        while (matcher.find()) {
+            @Nullable final String name = matcher.group(1);
+            // We have to keep already existing parameters.
+            if (!result.containsKey(name)) {
+                result.put(name, parseWord(matcher.group(2)));
             }
         }
-        return matcher.hitEnd() ? unmodifiableMap(result) : null;
+
+        return unmodifiableMap(result);
     }
 
-    private static String parseWord(final String value) {
+    @Nullable
+    private static String parseWord(@Nullable final String value) {
         if (value == null) {
             return null;
         }
@@ -98,13 +90,15 @@ class PreferParser {
         }
         // Unquote backslash-quoted characters.
         if (result.indexOf('\\') >= 0) {
+            // TODO compile and re-use pattern
             result = result.replaceAll("\\\\(.)", "$1");
         }
         return emptyToNull(result);
     }
 
-    private static String emptyToNull(final String s) {
-        return s == null || s.isEmpty() ? null : s;
+    @Nullable
+    private static String emptyToNull(@Nonnull final String s) {
+        return s.isEmpty() ? null : s;
     }
 
 }

@@ -3,13 +3,14 @@ package io.github.whiskeysierra.http.prefer;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
 
 public interface Prefer {
+
+    String PREFER = "Prefer";
+    String PREFERENCE_APPLIED = "Preference-Applied";
 
     Definition<Void> RESPOND_ASYNC = new RespondAsyncDefinition();
     Definition<Return> RETURN = new ReturnDefinition();
@@ -27,8 +28,6 @@ public interface Prefer {
     boolean apply(final Definition<?> definition);
 
     default <T> boolean apply(final Preference<T> preference) {
-        // The syntax of the Preference-Applied header differs from that of the
-        // Prefer header in that parameters are not included.
         return apply(preference.getDefinition(), preference.getValue());
     }
 
@@ -55,14 +54,8 @@ public interface Prefer {
 
     String applied();
 
-    void applyTo(final BiConsumer<String, String> target);
-
-    static Prefer parseFrom(final Function<String, String> provider) {
-        return valueOf(provider.apply("Prefer"));
-    }
-
     static Prefer valueOf(@Nullable final String value) {
-        return valueOf(singletonList(value));
+        return valueOf(singleton(value));
     }
 
     static Prefer valueOf(final Collection<String> values) {

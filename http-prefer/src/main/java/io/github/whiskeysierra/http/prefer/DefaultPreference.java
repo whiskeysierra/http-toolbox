@@ -11,9 +11,10 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor
 @Getter
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-final class RawPreference {
+class DefaultPreference<T> implements Preference<T> {
 
-    String value;
+    Definition<T> definition;
+    T value;
     Map<String, String> parameters;
 
 }

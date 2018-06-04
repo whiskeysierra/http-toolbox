@@ -14,7 +14,7 @@ final class RespondAsyncDefinition implements Definition<Void> {
 
     @Override
     public String render(final Void value) {
-        return getName();
+        return null;
     }
 
 }

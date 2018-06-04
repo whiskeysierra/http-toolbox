@@ -13,11 +13,7 @@
     <description>Collection of utility libraries for HTTP</description>
     <url>https://github.com/whiskeysierra/http-toolbox</url>
 
-    <organization>
-        <name>Zalando SE</name>
-    </organization>
-
-    <inceptionYear>2015</inceptionYear>
+    <inceptionYear>2018</inceptionYear>
 
     <licenses>
         <license>
@@ -30,16 +26,14 @@
     <developers>
         <developer>
             <name>Willi Schönborn</name>
-            <email>willi.schoenborn@zalando.de</email>
-            <organization>Zalando SE</organization>
-            <organizationUrl>https://tech.zalando.com/</organizationUrl>
+            <email>w.schoenborn@gmail.com</email>
         </developer>
     </developers>
 
     <scm>
-        <url>https://github.com/zalando/faux-pas</url>
-        <connection>scm:git:git@github.com:zalando/faux-pas.git</connection>
-        <developerConnection>scm:git:git@github.com:zalando/faux-pas.git</developerConnection>
+        <url>https://github.com/whiskeysierra/http-toolbox</url>
+        <connection>scm:git:git@github.com:whiskeysierra/http-toolbox.git</connection>
+        <developerConnection>scm:git:git@github.com:whiskeysierra/http-toolbox.git</developerConnection>
     </scm>
 
     <modules>

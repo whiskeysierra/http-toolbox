@@ -85,15 +85,4 @@ class ApplyTest {
         verify(handlingConsumer, never()).accept(any());
     }
 
-    @Test
-    void apply2() {
-    }
-
-    @Test
-    void apply3() {
-    }
-
-    @Test
-    void apply4() {
-    }
 }

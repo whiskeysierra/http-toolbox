@@ -27,19 +27,19 @@ class ApplyTest {
 
     @Test
     void shouldApplyDefinition() {
-        assertTrue(unit.apply(Prefer.HANDLING));
+        assertTrue(unit.applies(Prefer.HANDLING));
     }
 
     @Test
     void shouldNotApplyDefinition() {
-        assertFalse(unit.apply(Prefer.RETURN));
+        assertFalse(unit.applies(Prefer.RETURN));
     }
 
     @Test
     void shouldApplyPreference() {
         final Preference<Handling> preference = unit.get(Prefer.HANDLING);
 
-        assertTrue(unit.apply(preference));
+        assertTrue(unit.applies(preference));
     }
 
     @Test
@@ -49,12 +49,12 @@ class ApplyTest {
 
     @Test
     void shouldApplyDefinitionWithValue() {
-        assertTrue(unit.apply(Prefer.HANDLING, Handling.LENIENT));
+        assertTrue(unit.applies(Prefer.HANDLING, Handling.LENIENT));
     }
 
     @Test
     void shouldNotApplyDefinitionWithValue() {
-        assertFalse(unit.apply(Prefer.HANDLING, Handling.STRICT));
+        assertFalse(unit.applies(Prefer.HANDLING, Handling.STRICT));
     }
 
     @Test

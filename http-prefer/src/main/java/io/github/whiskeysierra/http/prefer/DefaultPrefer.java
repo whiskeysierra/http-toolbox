@@ -36,7 +36,7 @@ final class DefaultPrefer implements Prefer {
     }
 
     @Override
-    public boolean apply(final Definition<?> definition) {
+    public boolean applies(final Definition<?> definition) {
         if (contains(definition)) {
             applied.put(definition.getName(), get(definition));
             return true;
@@ -58,6 +58,7 @@ final class DefaultPrefer implements Prefer {
     }
 
     public static Prefer parse(final Collection<String> values) {
+        // TODO re-use
         final PreferParser parser = new PreferParser();
         final Map<String, RawPreference> preferences = parser.parse(values);
         return new DefaultPrefer(preferences);

@@ -33,7 +33,7 @@ class WaitDefinitionTest {
     void renderApplied() {
         final Prefer unit = Prefer.valueOf("wait=1");
 
-        unit.apply(Prefer.WAIT);
+        unit.applies(Prefer.WAIT);
 
         assertEquals("wait=1", unit.applied());
     }

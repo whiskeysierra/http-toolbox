@@ -21,7 +21,7 @@ class RespondAsyncDefinitionTest {
 
     @Test
     void renderApplied() {
-        unit.apply(Prefer.RESPOND_ASYNC);
+        unit.applies(Prefer.RESPOND_ASYNC);
         assertEquals("respond-async", unit.applied());
     }
 

@@ -25,15 +25,15 @@ public interface Prefer {
 
     <T> Preference<T> get(final Definition<T> definition) throws IllegalArgumentException;
 
-    boolean apply(final Definition<?> definition);
+    boolean applies(final Definition<?> definition);
 
-    default <T> boolean apply(final Preference<T> preference) {
-        return apply(preference.getDefinition(), preference.getValue());
+    default <T> boolean applies(final Preference<T> preference) {
+        return applies(preference.getDefinition(), preference.getValue());
     }
 
-    default <T> boolean apply(final Definition<T> definition, final T value) {
+    default <T> boolean applies(final Definition<T> definition, final T value) {
         if (contains(definition, value)) {
-            apply(definition);
+            applies(definition);
             return true;
         }
 
@@ -41,13 +41,13 @@ public interface Prefer {
     }
 
     default <T> void apply(final Definition<T> definition, final Consumer<Preference<T>> consumer) {
-        if (apply(definition)) {
+        if (applies(definition)) {
             consumer.accept(get(definition));
         }
     }
 
     default <T> void apply(final Definition<T> definition, final T value, final Consumer<Preference<T>> consumer) {
-        if (apply(definition, value)) {
+        if (applies(definition, value)) {
             consumer.accept(get(definition));
         }
     }

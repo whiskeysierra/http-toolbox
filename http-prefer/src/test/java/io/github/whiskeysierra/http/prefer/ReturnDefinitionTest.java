@@ -41,7 +41,7 @@ class ReturnDefinitionTest {
     void renderApplied() {
         final Prefer unit = Prefer.valueOf("return=minimal");
 
-        unit.apply(Prefer.RETURN);
+        unit.applies(Prefer.RETURN);
 
         assertEquals("return=minimal", unit.applied());
     }

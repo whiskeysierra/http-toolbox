@@ -41,7 +41,7 @@ class HandlingDefinitionTest {
     void renderApplied() {
         final Prefer unit = Prefer.valueOf("handling=strict");
 
-        unit.apply(Prefer.HANDLING);
+        unit.applies(Prefer.HANDLING);
 
         assertEquals("handling=strict", unit.applied());
     }

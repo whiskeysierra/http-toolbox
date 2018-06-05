@@ -15,7 +15,7 @@ class PreferenceAppliedTest {
         // TODO doesn't belong here
         assertEquals(";", quote.getValue());
 
-        unit.apply(quote);
+        unit.applies(quote);
 
         assertEquals("quote=\";\"", unit.applied());
 

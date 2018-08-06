@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>io.github.whiskeysierra</groupId>
     <artifactId>http-toolbox</artifactId>
     <version>0.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-
     <name>HTTP Toolbox</name>
     <description>Collection of utility libraries for HTTP</description>
     <url>https://github.com/whiskeysierra/http-toolbox</url>
-
     <inceptionYear>2018</inceptionYear>
-
     <licenses>
         <license>
             <name>MIT License</name>
@@ -22,24 +16,30 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <developers>
         <developer>
             <name>Willi Schönborn</name>
             <email>w.schoenborn@gmail.com</email>
         </developer>
     </developers>
-
+    <modules>
+        <module>http-prefer</module>
+    </modules>
     <scm>
         <url>https://github.com/whiskeysierra/http-toolbox</url>
         <connection>scm:git:git@github.com:whiskeysierra/http-toolbox.git</connection>
         <developerConnection>scm:git:git@github.com:whiskeysierra/http-toolbox.git</developerConnection>
     </scm>
-
-    <modules>
-        <module>http-prefer</module>
-    </modules>
-
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -48,56 +48,6 @@
         <junit-jupiter.version>5.2.0</junit-jupiter.version>
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gag</groupId>
-            <artifactId>gag</artifactId>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>java-hamcrest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hobsoft.hamcrest</groupId>
-            <artifactId>hamcrest-compose</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -123,7 +73,6 @@
                 <version>1.18.2</version>
                 <scope>provided</scope>
             </dependency>
-
             <!-- Testing -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -193,7 +142,53 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gag</groupId>
+            <artifactId>gag</artifactId>
+        </dependency>
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>java-hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hobsoft.hamcrest</groupId>
+            <artifactId>hamcrest-compose</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -310,18 +305,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <profiles>
         <profile>
             <id>release</id>
@@ -382,5 +365,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

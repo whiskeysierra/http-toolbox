@@ -3,8 +3,6 @@
 [![Javadoc](http://javadoc.io/badge/io.github.whiskeysierra/http-prefer.svg)](http://www.javadoc.io/doc/io.github.whiskeysierra/http-prefer)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.whiskeysierra/http-prefer.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.whiskeysierra/http-prefer)
 
-
-
 Put a meaningful, short, plain-language description of what
 this project is trying to accomplish and why it matters.
 Describe the problem(s) this project solves.

@@ -4,8 +4,8 @@
 
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 ![Build Status](https://github.com/whiskeysierra/http-toolbox/workflows/build/badge.svg)
-[![Coverage Status](https://img.shields.io/coveralls/whiskeysierra/http-toolbox/master.svg)](https://coveralls.io/r/whiskeysierra/http-toolbox)
-[![Code Quality](https://img.shields.io/codacy/grade/64f144ccc9e94925ba685276c18d9c30/master.svg)](https://www.codacy.com/app/whiskeysierra/http-toolbox)
+[![Coverage Status](https://img.shields.io/coveralls/whiskeysierra/http-toolbox/main.svg)](https://coveralls.io/r/whiskeysierra/http-toolbox)
+[![Code Quality](https://img.shields.io/codacy/grade/64f144ccc9e94925ba685276c18d9c30/main.svg)](https://www.codacy.com/app/whiskeysierra/http-toolbox)
 [![Release](https://img.shields.io/github/release/whiskeysierra/http-toolbox.svg)](https://github.com/whiskeysierra/http-toolbox/releases)
 
 Put a meaningful, short, plain-language description of what
